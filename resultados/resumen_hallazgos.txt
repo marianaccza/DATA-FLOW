@@ -1,0 +1,60 @@
+======================================================================
+RESUMEN DE HALLAZGOS: PALABRAS OBSCENAS EN CANCIONES DE REGGAETÓN
+======================================================================
+
+1. QUÉ SE ANALIZÓ
+Se analizaron 239 canciones (2010-2025; 107.547 palabras en total). Cada letra se comparó con
+el Diccionario Maestro (1.419 términos). Se consideran obscenas las categorías SEXUALIDAD,
+DISCRIMINACION (204 entradas del diccionario). La proporción de una canción es el porcentaje
+de sus palabras que coincide con esos términos.
+
+2. HALLAZGO GENERAL
+En promedio, el 0,91 % de las palabras de una canción es obscena (mediana 0,50 %; rango de
+0,00 % a 5,41 %). 58 canciones (24,3 %) no contienen ninguna y 28 (11,7 %) superan el 2 %. La
+distribución es asimétrica: unas pocas canciones con valores altos elevan el promedio por
+encima de la mediana.
+
+3. CANCIONES CON MAYOR PROPORCIÓN
+Las tres canciones con mayor proporción son «Chulo pt.2» (Bad Gyal, Tokischa y Young Miko,
+2023, 5,41 %), «Zun Da Da» (Zion, 2011, 5,31 %) y «Volver a Verte» (Ñengo Flow, 2025, 5,12 %).
+
+4. TÉRMINOS MÁS FRECUENTES
+Los términos obscenos más repetidos son: culo (69 veces), ganas (52 veces), nalga (40 veces),
+deseo (38 veces), en la cama (38 veces). Se cuentan todas las apariciones, de modo que los
+coros repetidos pesan más.
+
+5. CATEGORÍAS DEL DICCIONARIO
+De las 21 categorías del diccionario, las de mayor peso promedio por canción son ONOMATOPEYAS
+(4,60 %), CONSENTIMIENTO (3,24 %), GENERO_PODER (1,60 %). Entre las categorías que cuentan
+como obscenas: SEXUALIDAD promedia 0,83 %; DISCRIMINACION promedia 0,08 %.
+
+6. EVOLUCIÓN A LO LARGO DE LOS AÑOS
+El promedio anual más alto fue el de 2025 (1,70 %) y el más bajo el de 2010 (0,40 %).
+
+Con los datos de esta muestra, la proporción de palabras obscenas aumentó de forma
+estadísticamente significativa entre 2010 y 2025 (Spearman rho = 0,32, p < 0,001). La línea de
+tendencia pasa de aproximadamente 0,49 % en 2010 a 1,34 % en 2025. El cambio estimado es de
++0,057 puntos porcentuales por año (IC 95 %: +0,026 a +0,087), es decir, un cambio relativo de
++6,1 % por año.
+
+Aun así, el año explica solo el 5,3 % de la variación entre canciones (R2 = 0,053): la
+tendencia existe pero es débil, y el resto de la variación se debe a factores que este
+análisis no mide.
+
+Al considerar solo los términos marcados como explícitos, el resultado es en la misma
+dirección (rho = 0,34, p < 0,001; cambio relativo de +10,5 % por año).
+
+7. LIMITACIONES A TENER EN CUENTA
+a) El diccionario es una propuesta inicial sin validación manual completa y algunos términos
+tienen más de un sentido (por ejemplo: culo, sexo, caliente), lo que puede inflar las cifras.
+Excluyendo los términos marcados como ambiguos, el promedio baja a 0,75 %.
+
+b) Hay alrededor de 15 canciones por año, por lo que los promedios anuales son inestables:
+pocas canciones muy explícitas los mueven bastante.
+
+c) Una tendencia estadística indica asociación, no causa, y vale para esta muestra de
+canciones, no necesariamente para todo el reggaetón.
+
+d) Se recomienda revisar la hoja 'detalle_coincidencias' del Excel para validar en contexto
+las palabras detectadas.
+
