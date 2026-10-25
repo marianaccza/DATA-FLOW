@@ -32,13 +32,91 @@ cat("Diccionario:", ruta_diccionario, "\n")
 df  <- read_excel(ruta_canciones)
 dic <- read_excel(ruta_diccionario)
 
-# ── 2. FILTRAR SOLO MUJERES CON LETRA ────────────────────────
-# Ajusta el valor si en tu Excel dice algo distinto a "Mujer"
-df_mujeres <- df %>%
+# ── 2. FILTRAR MUJERES + EXTRAER PARTES FEMENINAS DE COLABORACIONES MIXTAS ──
+
+# Nombres femeninos normalizados (sin tildes, minúsculas)
+nombres_femeninos <- c(
+  "natti natasha", "karol g", "becky g", "ivy queen", "young miko",
+  "rosalia", "bad gyal", "farina", "bellakath", "ms nina",
+  "maria becerra", "mariah angeliq", "tokischa", "anitta", "tini",
+  "cazzu", "la duraca", "sofia reyes", "thalia", "leslie shaw",
+  "jenny la sexy voz", "jessikita", "rayda", "demphra", "kathy phillips",
+  "la materialista", "chocolate remix", "cardi b", "selena gomez",
+  "bia", "sky rompiendo", "dfzm", "ayra starr", "crissin",
+  "nicki minaj", "shakira", "maria jose"
+)
+
+# Función: normaliza un nombre (sin tildes, minúsculas, sin espacios extra)
+normalizar <- function(x) {
+  x <- tolower(trimws(x))
+  x <- chartr("áéíóúüàèìòùâêîôûãõñ", "aeiouuaeiouaeiouaon", x)
+  x
+}
+
+# ── 2a. Canciones completas de mujeres ───────────────────────────────────────
+df_solo_mujeres <- df %>%
   filter(`Género del Intérprete` == "Mujer") %>%
+  filter(!is.na(letra), nchar(trimws(letra)) > 0) %>%
+  mutate(fuente = "solo")
+
+# ── 2b. Partes femeninas en colaboraciones mixtas ────────────────────────────
+# Para cada canción de colaboración mixta, extrae solo los párrafos
+# cuya etiqueta [Sección: Artista] contiene al menos un nombre femenino.
+
+extraer_partes_femeninas <- function(letra_completa) {
+  if (is.na(letra_completa) || nchar(trimws(letra_completa)) == 0) return(NA)
+  
+  # Partir la letra en bloques por etiqueta [...]
+  # Cada bloque empieza en una etiqueta y termina antes de la siguiente
+  bloques <- strsplit(letra_completa, "(?=\\[)", perl = TRUE)[[1]]
+  bloques <- bloques[nchar(trimws(bloques)) > 0]
+  
+  partes_femeninas <- c()
+  
+  for (bloque in bloques) {
+    # Extraer la etiqueta del bloque
+    etiqueta <- regmatches(bloque, regexpr("\\[.*?\\]", bloque))
+    if (length(etiqueta) == 0) next
+    
+    etiqueta_norm <- normalizar(etiqueta)
+    
+    # Ver si algún nombre femenino aparece en la etiqueta
+    es_femenino <- any(sapply(nombres_femeninos, function(nom) {
+      grepl(nom, etiqueta_norm, fixed = TRUE)
+    }))
+    
+    if (es_femenino) {
+      # Quedarse solo con el texto del bloque (sin la etiqueta)
+      texto <- gsub("\\[.*?\\]", "", bloque)
+      texto <- trimws(texto)
+      if (nchar(texto) > 0) partes_femeninas <- c(partes_femeninas, texto)
+    }
+  }
+  
+  if (length(partes_femeninas) == 0) return(NA)
+  paste(partes_femeninas, collapse = " ")
+}
+
+df_colab_raw <- df %>%
+  filter(`Género del Intérprete` == "Colaboración Mixta") %>%
   filter(!is.na(letra), nchar(trimws(letra)) > 0)
 
-cat("\nCanciones de mujeres con letra:", nrow(df_mujeres), "\n")
+df_colab_raw$letra_femenina <- sapply(df_colab_raw$letra, extraer_partes_femeninas)
+
+df_colab <- df_colab_raw %>%
+  filter(!is.na(letra_femenina), nchar(trimws(letra_femenina)) > 0) %>%
+  mutate(
+    letra   = as.character(letra_femenina),   # reemplaza letra completa por solo la parte femenina
+    fuente  = "colaboracion"
+  ) %>%
+  select(-letra_femenina)
+
+# ── 2c. Unir ambos conjuntos ─────────────────────────────────────────────────
+df_mujeres <- bind_rows(df_solo_mujeres, df_colab)
+
+cat("\nCanciones de mujeres con letra:", nrow(df_solo_mujeres), "\n")
+cat("Colaboraciones con partes femeninas:", nrow(df_colab), "\n")
+cat("Total para análisis:", nrow(df_mujeres), "\n\n")
 cat("Por año:\n")
 print(sort(table(df_mujeres$año)))
 
