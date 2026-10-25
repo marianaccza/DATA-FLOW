@@ -1,16 +1,16 @@
 ANÁLISIS DE CONTENIDO TEMÁTICO POR GÉNERO DEL INTÉRPRETE
 =========================================================
 
-Se compararon 138 canciones de intérpretes masculinos y 88 de intérpretes femeninas, usando las 21 categorías temáticas del diccionario maestro.
+Se compararon 140 canciones de intérpretes masculinos y 85 de intérpretes femeninas, usando las 21 categorías temáticas del diccionario maestro.
 
-Se encontraron 4 categoría(s) con diferencias estadísticamente significativas (p < 0.05):
+Se encontraron 5 categoría(s) con diferencias estadísticamente significativas (p < 0.05):
 
-  - CALLE_IDENTIDAD: mayor en Hombre (hombre: 2.1037% vs mujer: 0.8981%, p = < 0.001, efecto r = 0.315)
-  - ONOMATOPEYAS: mayor en Hombre (hombre: 2.3814% vs mujer: 1.5644%, p = < 0.001, efecto r = 0.227)
-  - MOVILIDAD: mayor en Hombre (hombre: 0.3666% vs mujer: 0.1919%, p = 0.011, efecto r = 0.169)
+  - CALLE_IDENTIDAD: mayor en Hombre (hombre: 2.0997% vs mujer: 0.9123%, p = < 0.001, efecto r = 0.312)
+  - ONOMATOPEYAS: mayor en Hombre (hombre: 2.3623% vs mujer: 1.5719%, p = < 0.001, efecto r = 0.229)
+  - MOVILIDAD: mayor en Hombre (hombre: 0.3642% vs mujer: 0.1936%, p = 0.01, efecto r = 0.172)
 
 El tamaño del efecto (r) indica la magnitud de la diferencia:
   r < 0.10 = efecto pequeño | 0.10-0.30 = moderado | > 0.30 = grande
 
-LIMITACIONES: la muestra tiene 226 canciones con letra disponible. Con pocos casos por género, los resultados son indicativos y no generalizables a todo el reggaetón.
+LIMITACIONES: la muestra tiene 225 canciones con letra disponible. Con pocos casos por género, los resultados son indicativos y no generalizables a todo el reggaetón.
 

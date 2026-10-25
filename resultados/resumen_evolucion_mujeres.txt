@@ -1,0 +1,13 @@
+EVOLUCIÓN TEMÁTICA — CANTANTES MUJERES (2010–2025)
+===================================================
+
+Se analizaron 85 canciones de intérpretes femeninas distribuidas en 16 años del período 2010–2025, usando las 21 categorías temáticas del diccionario maestro.
+
+Se encontraron 6 categoría(s) con tendencia temporal estadísticamente significativa (p < 0.05):
+
+  - GENERO_PODER: aumenta con el tiempo (ρ =  0.559, p = < 0.001, cambio estimado =  0.3724% por año)
+  - SEXUALIDAD: aumenta con el tiempo (ρ =  0.343, p = 0.001, cambio estimado =  0.1049% por año)
+  - ROMANCE: disminuye con el tiempo (ρ = -0.316, p = 0.003, cambio estimado = -0.1961% por año)
+
+NOTA: Con 85 canciones la tendencia es indicativa. Al ampliar la muestra a 50+ canciones los resultados serán más robustos.
+

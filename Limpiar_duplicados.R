@@ -9,6 +9,18 @@ ruta_entrada <- here("base de canciones", "excel con todas las canciones.xlsx")
 
 df <- read_excel(ruta_entrada)
 
+# Ver cuáles se eliminan antes de borrarlas
+eliminadas <- df %>%
+  filter(!is.na(letra) & duplicated(letra)) %>%
+  select(año, cancion, artista)
+
+if (nrow(eliminadas) > 0) {
+  cat("\nCanciones eliminadas por letra duplicada:\n")
+  print(eliminadas)
+} else {
+  cat("\nNo se encontraron letras duplicadas.\n")
+}
+
 df_limpio <- df %>%
   filter(is.na(letra) | !duplicated(letra))
 
