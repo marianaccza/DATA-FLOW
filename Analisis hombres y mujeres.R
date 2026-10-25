@@ -163,8 +163,17 @@ comparacion <- lapply(cols_cat, function(col) {
 }) %>% bind_rows() %>%
   arrange(p_valor_num)
 
-cat("\n--- CATEGORÍAS CON DIFERENCIA SIGNIFICATIVA ---\n")
-print(comparacion %>% filter(significativa == "Sí") %>%
+# Ajuste Benjamini-Hochberg para comparaciones múltiples
+comparacion <- comparacion %>%
+  mutate(
+    p_ajustado     = p.adjust(p_valor_num, method = "BH"),
+    p_ajustado_fmt = ifelse(p_ajustado < 0.001, "< 0.001",
+                            as.character(round(p_ajustado, 3))),
+    significativa_bh = ifelse(p_ajustado < 0.05, "Sí", "No")
+  )
+
+cat("\n--- CATEGORÍAS CON DIFERENCIA SIGNIFICATIVA (ajuste BH) ---\n")
+print(comparacion %>% filter(significativa_bh == "Sí") %>%
         select(categoria, media_hombre, media_mujer, p_valor, efecto_r, mayor_en))
 
 # ── 6. GRÁFICOS ───────────────────────────────────────────────
