@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bitácora de Uso de IA — Proyecto 3 Reggaetón</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f6f9;
+      color: #222;
+      padding: 30px 20px;
+    }
+    .container { max-width: 960px; margin: 0 auto; }
+
+    /* ENCABEZADO */
+    .header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: white;
+      padding: 40px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+    }
+    .header h1 { font-size: 1.8em; margin-bottom: 8px; }
+    .header .subtitle { font-size: 1em; opacity: 0.85; margin-bottom: 20px; }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .meta-item {
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+    .meta-item .label { font-size: 0.75em; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
+    .meta-item .value { font-size: 0.95em; font-weight: 600; margin-top: 4px; }
+
+    /* RESUMEN */
+    .resumen {
+      background: white;
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .resumen h2 { font-size: 1.1em; color: #0f3460; margin-bottom: 14px; border-bottom: 2px solid #e8ecf0; padding-bottom: 8px; }
+    .stats-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; }
+    .stat-box {
+      background: #f0f4ff;
+      border-left: 4px solid #0f3460;
+      padding: 10px 16px;
+      border-radius: 6px;
+      flex: 1;
+      min-width: 130px;
+    }
+    .stat-box .num { font-size: 1.6em; font-weight: 700; color: #0f3460; }
+    .stat-box .desc { font-size: 0.8em; color: #555; margin-top: 2px; }
+
+    /* TABLA DE IAs */
+    .ia-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .ia-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      border-top: 4px solid;
+    }
+    .ia-card.claude { border-color: #c87533; }
+    .ia-card.chatgpt { border-color: #10a37f; }
+    .ia-card.gemini { border-color: #4285f4; }
+    .ia-card h3 { font-size: 1em; margin-bottom: 8px; }
+    .ia-card .badge {
+      display: inline-block;
+      font-size: 0.7em;
+      padding: 3px 8px;
+      border-radius: 20px;
+      color: white;
+      margin-bottom: 10px;
+    }
+    .claude .badge { background: #c87533; }
+    .chatgpt .badge { background: #10a37f; }
+    .gemini .badge { background: #4285f4; }
+    .ia-card ul { font-size: 0.85em; color: #444; padding-left: 16px; line-height: 1.8; }
+
+    /* ENTRADAS BITÁCORA */
+    .section-title {
+      font-size: 1.1em;
+      font-weight: 700;
+      color: #0f3460;
+      margin: 28px 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: #e0e6ef;
+    }
+
+    .entrada {
+      background: white;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+    .entrada-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .num-badge {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.9em; color: white;
+      flex-shrink: 0;
+    }
+    .nb-claude { background: #c87533; }
+    .nb-chatgpt { background: #10a37f; }
+    .nb-gemini { background: #4285f4; }
+
+    .entrada-titulo { font-weight: 600; font-size: 0.95em; flex: 1; }
+    .ia-tag {
+      font-size: 0.72em;
+      padding: 3px 10px;
+      border-radius: 20px;
+      color: white;
+      font-weight: 600;
+    }
+    .tag-claude { background: #c87533; }
+    .tag-chatgpt { background: #10a37f; }
+    .tag-gemini { background: #4285f4; }
+
+    .entrada-body { padding: 16px 20px; }
+    .entrada-body table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85em;
+    }
+    .entrada-body table td {
+      padding: 7px 10px;
+      border-bottom: 1px solid #f4f4f4;
+      vertical-align: top;
+    }
+    .entrada-body table td:first-child {
+      font-weight: 600;
+      color: #555;
+      width: 160px;
+      white-space: nowrap;
+    }
+    .phase-tag {
+      display: inline-block;
+      background: #e8f4f0;
+      color: #0a6640;
+      font-size: 0.75em;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .link-ref {
+      font-size: 0.78em;
+      color: #0f3460;
+      word-break: break-all;
+    }
+    .output-tag {
+      display: inline-block;
+      background: #fff3e0;
+      color: #b45309;
+      font-size: 0.75em;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin: 2px 2px 2px 0;
+    }
+
+    /* REFLEXIÓN */
+    .reflexion {
+      background: linear-gradient(135deg, #0f3460, #1a1a2e);
+      color: white;
+      border-radius: 12px;
+      padding: 28px;
+      margin-top: 24px;
+    }
+    .reflexion h2 { margin-bottom: 14px; font-size: 1.1em; }
+    .reflexion p { font-size: 0.9em; line-height: 1.7; opacity: 0.9; margin-bottom: 10px; }
+
+    .footer {
+      text-align: center;
+      font-size: 0.8em;
+      color: #999;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ENCABEZADO -->
+  <div class="header">
+    <h1>📋 Bitácora de Uso de Inteligencia Artificial</h1>
+    <div class="subtitle">Proyecto 3 — Estadística del Reggaetón · Análisis estadístico de un corpus de letras con validación de un LLM como instrumento de medición</div>
+    <div class="meta-grid">
+      <div class="meta-item">
+        <div class="label">Curso</div>
+        <div class="value">Estadística Industrial</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Docente</div>
+        <div class="value">Enrique J. De La Hoz Domínguez</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Institución</div>
+        <div class="value">Universidad del Magdalena</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Semestre</div>
+        <div class="value">2026-II</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Entrega</div>
+        <div class="value">25 de octubre de 2026</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Programa</div>
+        <div class="value">Ingeniería Industrial</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUMEN ESTADÍSTICO -->
+  <div class="resumen">
+    <h2>📊 Resumen del uso de IA en el proyecto</h2>
+    <p style="font-size:0.9em; color:#555; line-height:1.6;">
+      A lo largo del desarrollo del Proyecto 3 se utilizaron tres herramientas de inteligencia artificial generativa: Claude (Anthropic), ChatGPT (OpenAI) y Gemini (Google). Cada una fue empleada en tareas específicas complementarias, siguiendo siempre el criterio de que el equipo tomara las decisiones metodológicas y las IA funcionaran como herramientas de apoyo técnico y de investigación. El corpus final cuenta con 160 canciones base (10 por año, 2010–2025) más 80 canciones adicionales de artistas femeninas incorporadas para balancear la representación de género, para un total de 240 canciones.
+    </p>
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="num">3</div>
+        <div class="desc">IAs utilizadas</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">7</div>
+        <div class="desc">Conversaciones documentadas</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">8</div>
+        <div class="desc">Fases del proyecto cubiertas</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">240</div>
+        <div class="desc">Canciones en el corpus</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUMEN POR IA -->
+  <div class="section-title">🤖 Herramientas utilizadas</div>
+  <div class="ia-cards">
+    <div class="ia-card claude">
+      <h3>Claude (Anthropic)</h3>
+      <span class="badge">Claude Sonnet 4.6</span>
+      <ul>
+        <li>Diseño metodológico completo</li>
+        <li>Construcción del corpus de 160 canciones</li>
+        <li>Scripts R para obtención de URLs</li>
+        <li>Verificación y limpieza de duplicados</li>
+        <li>Pipeline de codificación (Fase 4)</li>
+        <li>Definición de fases del proyecto</li>
+      </ul>
+    </div>
+    <div class="ia-card chatgpt">
+      <h3>ChatGPT (OpenAI)</h3>
+      <span class="badge">GPT-4o con análisis de datos</span>
+      <ul>
+        <li>Limpieza de letras duplicadas en Excel</li>
+        <li>Análisis de proporciones de palabras por canción</li>
+        <li>Generación de gráficos e histogramas</li>
+        <li>Análisis de tendencia temporal (Mann-Kendall)</li>
+        <li>Búsqueda de canciones femeninas por año</li>
+        <li>Verificación de URLs en Genius</li>
+      </ul>
+    </div>
+    <div class="ia-card gemini">
+      <h3>Gemini (Google)</h3>
+      <span class="badge">Búsqueda web</span>
+      <ul>
+        <li>Relacionar cada canción del corpus con su URL correcta en Genius</li>
+        <li>Verificación de links de letras por artista y título</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ENTRADAS DE BITÁCORA -->
+  <div class="section-title">📝 Entradas de la bitácora</div>
+
+  <!-- ENTRADA 1 -->
+  <div class="entrada">
+    <div class="entrada-header">
+      <div class="num-badge nb-claude">1</div>
+      <div class="entrada-titulo">Diseño metodológico, corpus y scripts R</div>
+      <span class="ia-tag tag-claude">Claude</span>
+    </div>
+    <div class="entrada-body">
+      <table>
+        <tr>
+          <td>Fecha aproximada</td>
+          <td>Octubre 2026</td>
+        </tr>
+        <tr>
+          <td>Fase del proyecto</td>
+          <td>
+            <span class="phase-tag">Fase 1 — Formulación</span>
+            <span class="phase-tag">Fase 2 — Corpus</span>
+            <span class="phase-tag">Fase 3 — Recolección</span>
+          </td>
+        </tr>
+        <tr>
+          <td>Enlace</td>
+          <td><span class="link-ref">https://claude.ai/share/1103620f-9452-482d-be10-3d9eb4dd8ef5</span></td>
+        </tr>
+        <tr>
+          <td>Tarea solicitada</td>
+          <td>Definición de preguntas de investigación, selección de 160 canciones de reggaetón puro (10 por año, 2010–2025), construcción de scripts R para obtención de URLs desde Genius y lyrics.ovh, verificación de duplicados y corrección del corpus.</td>
+        </tr>
+        <tr>
+          <td>Prompt principal</td>
+          <td>Diseño del corpus con criterios: reggaetón puro, sin duplicados, top 10 por año, con género del intérprete (H/M/HM), URLs de dos fuentes legales gratuitas.</td>
+        </tr>
+        <tr>
+          <td>Decisiones del equipo</td>
+          <td>El equipo definió las preguntas de investigación, los criterios de selección de canciones, la definición operacional de reggaetón puro y validó canción por canción que cumpliera los requisitos.</td>
+        </tr>
+        <tr>
+          <td>Uso de la IA</td>
+          <td>Claude generó el código R, construyó el tribble de 160 canciones, detectó automáticamente duplicados mediante Python y propuso reemplazos cuando las canciones no cumplían los criterios de género o año.</td>
+        </tr>
+        <tr>
+          <td>Salidas obtenidas</td>
+          <td>
+            <span class="output-tag">proyecto3_crear_corpus.R</span>
+            <span class="output-tag">proyecto3_verificar_v5.R</span>
+            <span class="output-tag">corpus_metadata_v5.csv</span>
+          </td>
+        </tr>
+        <tr>
+          <td>Limitaciones detectadas</td>
+          <td>Billboard bloquea el acceso directo a los year-end charts históricos, por lo que el corpus 2010–2016 se construyó a partir de charts semanales y conocimiento documentado del género, no del year-end oficial.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ENTRADA 2 -->
+  <div class="entrada">
+    <div class="entrada-header">
+      <div class="num-badge nb-chatgpt">2</div>
+      <div class="entrada-titulo">Limpieza de letras duplicadas y análisis de proporciones</div>
+      <span class="ia-tag tag-chatgpt">ChatGPT</span>
+    </div>
+    <div class="entrada-body">
+      <table>
+        <tr>
+          <td>Fecha aproximada</td>
+          <td>Octubre 2026</td>
+        </tr>
+        <tr>
+          <td>Fase del proyecto</td>
+          <td>
+            <span class="phase-tag">Fase 3 — Recolección</span>
+            <span class="phase-tag">Fase 4 — Análisis de texto</span>
+          </td>
+        </tr>
+        <tr>
+          <td>Enlace</td>
+          <td><span class="link-ref">https://chatgpt.com/share/6add3843-ce40-83e8-8948-9982aa768375</span></td>
+        </tr>
+        <tr>
+          <td>Tarea solicitada</td>
+          <td>Código R que detecte y elimine canciones con letras idénticas en el Excel del corpus, usando la columna "letra". Análisis de proporciones de palabras del diccionario de palabras obscenas por canción individual, con histogramas y gráficos de evolución temporal.</td>
+        </tr>
+        <tr>
+          <td>Prompt principal</td>
+          <td>"Tengo este Excel con todas las canciones de reggaetón. Quiero que analice la columna de 'letra' y elimine las que estén repetidas. SOLO ELIMINA SI HAY LETRAS IGUALES."</td>
+        </tr>
+        <tr>
+          <td>Decisiones del equipo</td>
+          <td>El equipo decidió qué categorías contar como "obscenas", revisó los términos ambiguos identificados por la IA y determinó los criterios de análisis estadístico.</td>
+        </tr>
+        <tr>
+          <td>Uso de la IA</td>
+          <td>ChatGPT generó el script R de limpieza, detectó que había 1 letra repetida (Bichota/Relación), generó el script de análisis de proporciones por canción con las 21 categorías del diccionario, creó 5 gráficos (histograma, evolución anual, top 15 canciones, peso por categoría, panel resumen) y redactó un resumen automático de hallazgos.</td>
+        </tr>
+        <tr>
+          <td>Salidas obtenidas</td>
+          <td>
+            <span class="output-tag">analisis_obscenidad.R</span>
+            <span class="output-tag">analisis_obscenidad_por_cancion.xlsx</span>
+            <span class="output-tag">resumen_hallazgos.txt</span>
+            <span class="output-tag">5 gráficos PNG</span>
+          </td>
+        </tr>
+        <tr>
+          <td>Hallazgos preliminares</td>
+          <td>Promedio de palabras obscenas: 0,90% por canción. Mediana: 0,59%. La proporción aumentó significativamente entre 2010 y 2025 (Spearman ρ=0,31, p&lt;0,001), aunque el año solo explica el 3,5% de la variación entre canciones.</td>
+        </tr>
+        <tr>
+          <td>Limitaciones detectadas</td>
+          <td>Términos ambiguos en el diccionario (ej. "fácil", "hotel") pueden inflar resultados. Las palabras repetidas en el coro se cuentan múltiples veces.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ENTRADA 3 -->
+  <div class="entrada">
+    <div class="entrada-header">
+      <div class="num-badge nb-chatgpt">3</div>
+      <div class="entrada-titulo">Búsqueda y verificación de canciones femeninas por año</div>
+      <span class="ia-tag tag-chatgpt">ChatGPT</span>
+    </div>
+    <div class="entrada-body">
+      <table>
+        <tr>
+          <td>Fecha aproximada</td>
+          <td>Octubre 2026</td>
+        </tr>
+        <tr>
+          <td>Fase del proyecto</td>
+          <td>
+            <span class="phase-tag">Fase 1 — Diseño muestral</span>
+            <span class="phase-tag">Fase 2 — Corpus</span>
+          </td>
+        </tr>
+        <tr>
+          <td>Enlace</td>
+          <td><span class="link-ref">https://chatgpt.com/share/6add3976-91c0-83e9-95e6-3685215326ab</span></td>
+        </tr>
+        <tr>
+          <td>Tarea solicitada</td>
+          <td>Identificar canciones de mujeres de reggaetón por año (2010–2025) para balancear la muestra (solo 8 artistas mujeres en las 160 canciones iniciales), y verificar que los títulos, artistas y URLs en Genius fueran correctos.</td>
+        </tr>
+        <tr>
+          <td>Prompt principal</td>
+          <td>"Dame 5 canciones más por año pero que sean solo mujeres, de reggaetón nada más, con su link de Genius."</td>
+        </tr>
+        <tr>
+          <td>Decisiones del equipo</td>
+          <td>El equipo decidió ampliar la muestra para responder la pregunta sobre género del intérprete, rechazó canciones propuestas que no eran reggaetón puro o tenían años incorrectos, y validó manualmente cada URL antes de incluirla.</td>
+        </tr>
+        <tr>
+          <td>Uso de la IA</td>
+          <td>ChatGPT buscó y propuso 80 canciones femeninas (5 por año), verificó años de lanzamiento en Spotify, Apple Music y discografías, corrigió títulos incorrectos y generó el Excel ampliado con las canciones integradas en formato original con celdas en azul claro.</td>
+        </tr>
+        <tr>
+          <td>Salidas obtenidas</td>
+          <td>
+            <span class="output-tag">Base_reggaeton_ampliada_2010_2025.xlsx</span>
+            <span class="output-tag">Lista_corregida_reggaeton_mujeres_2010_2025.xlsx</span>
+          </td>
+        </tr>
+        <tr>
+          <td>Limitaciones detectadas</td>
+          <td>Varias canciones propuestas tenían años incorrectos o no eran reggaetón puro. La IA admitió que no pudo verificar que todas fueran las más escuchadas de su año. Para 2010–2016 la oferta de reggaetón exclusivamente femenino es muy limitada.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ENTRADA 4 -->
+  <div class="entrada">
+    <div class="entrada-header">
+      <div class="num-badge nb-chatgpt">4</div>
+      <div class="entrada-titulo">Verificación de canciones 2024–2025 y corrección de URLs</div>
+      <span class="ia-tag tag-chatgpt">ChatGPT</span>
+    </div>
+    <div class="entrada-body">
+      <table>
+        <tr>
+          <td>Fecha aproximada</td>
+          <td>Octubre 2026</td>
+        </tr>
+        <tr>
+          <td>Fase del proyecto</td>
+          <td>
+            <span class="phase-tag">Fase 2 — Corpus</span>
+            <span class="phase-tag">Fase 3 — Recolección</span>
+          </td>
+        </tr>
+        <tr>
+          <td>Enlace</td>
+          <td><span class="link-ref">https://chatgpt.com/share/6add5e7d-6550-83e9-8b1a-d464e2eb80c7</span></td>
+        </tr>
+        <tr>
+          <td>Tarea solicitada</td>
+          <td>Verificar que las canciones de 2024 y 2025 del corpus existieran realmente, rectificar títulos incorrectos ("Chilena" de J Balvin no existe, "Esencia" es un álbum, no una canción), encontrar reemplazos que fueran reggaetón puro y estuvieran en el top de ese año, con URLs válidas en Genius.</td>
+        </tr>
+        <tr>
+          <td>Prompt principal</td>
+          <td>"Vamos a cambiar esas dos canciones del mismo año 2024" / "Rectifica que esos sean los nombres de las canciones" / "Pero que las canciones estén en el top de ese año."</td>
+        </tr>
+        <tr>
+          <td>Decisiones del equipo</td>
+          <td>El equipo rechazó reemplazos que no eran reggaetón puro (La Plena — mezcla con plena puertorriqueña), verificó manualmente que las canciones existieran en Genius y exigió que fueran éxitos documentados del año correspondiente.</td>
+        </tr>
+        <tr>
+          <td>Uso de la IA</td>
+          <td>ChatGPT buscó reemplazos para canciones erróneas, verificó existencia de URLs en Genius, identificó errores de año en varias canciones propuestas y generó un análisis lingüístico del vocabulario de cada canción sugerida.</td>
+        </tr>
+        <tr>
+          <td>Salidas obtenidas</td>
+          <td>
+            <span class="output-tag">Correcciones de URLs 2024–2025</span>
+            <span class="output-tag">Lista de reemplazos verificados</span>
+          </td>
+        </tr>
+        <tr>
+          <td>Limitaciones detectadas</td>
+          <td>La IA propuso varias canciones que no existían o tenían años incorrectos. Fue necesario pedir rectificaciones múltiples veces antes de obtener opciones válidas para 2025.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ENTRADA 5 -->
+  <div class="entrada">
+    <div class="entrada-header">
+      <div class="num-badge nb-chatgpt">5</div>
+      <div class="entrada-titulo">Construcción del Diccionario Maestro de Reggaetón</div>
+      <span class="ia-tag tag-chatgpt">ChatGPT — Deep Research</span>
+    </div>
+    <div class="entrada-body">
+      <table>
+        <tr>
+          <td>Fecha aproximada</td>
+          <td>Octubre 2026</td>
+        </tr>
+        <tr>
+          <td>Fase del proyecto</td>
+          <td>
+            <span class="phase-tag">Fase 2 — Léxico y libro de códigos</span>
+          </td>
+        </tr>
+        <tr>
+          <td>Enlace</td>
+          <td><span class="link-ref">Conversación ChatGPT — modo Deep Research (investigación profunda)</span></td>
+        </tr>
+        <tr>
+          <td>Tarea solicitada</td>
+          <td>Investigación profunda de diccionarios de reggaetón con vocabulario explícito e implícito, construcción de un Diccionario Maestro propio con 21 categorías temáticas, y ampliación del diccionario con las palabras reales encontradas en las 159 letras del corpus.</td>
+        </tr>
+        <tr>
+          <td>Prompt principal</td>
+          <td>"Soy universitaria y estoy haciendo un proyecto de análisis de texto de las letras de reggaetón. Necesito diccionarios de reggaetón con todo tipo de palabras, explícitas e implícitas, lo más completo posible."</td>
+        </tr>
+        <tr>
+          <td>Decisiones del equipo</td>
+          <td>El equipo definió las 5 categorías principales del análisis (Romance/Amor, Sexualidad explícita, Fiesta/Hedonismo, Poder/Estatus, Empoderamiento), estableció los criterios de inclusión y exclusión, y decidió qué términos ambiguos excluir del análisis para evitar falsos positivos.</td>
+        </tr>
+        <tr>
+          <td>Uso de la IA</td>
+          <td>ChatGPT en modo Deep Research realizó una investigación profunda durante varios minutos, construyó el diccionario semilla con 1.420 entradas candidatas con campos de significado, categoría, nivel de explicitud, región, ventana temporal y fuente. Luego procesó las 159 letras del corpus e identificó 7.913 entradas con frecuencias y referencias por canción.</td>
+        </tr>
+        <tr>
+          <td>Salidas obtenidas</td>
+          <td>
+            <span class="output-tag">Diccionario_Maestro_Reggaeton_Investigacion.xlsx</span>
+            <span class="output-tag">Diccionario_Maestro_Reggaeton_UTF8.csv</span>
+            <span class="output-tag">Diccionario_Reggaeton_Ampliado_Corpus_2010_2025.xlsx</span>
+          </td>
+        </tr>
+        <tr>
+          <td>Limitaciones detectadas</td>
+          <td>El diccionario es un instrumento semilla, no un diccionario académico validado. Los términos ambiguos (ej. "fácil", "hotel", "cuarto") requieren validación contextual manual. Solo 5 de las 1.420 entradas tienen enlaces a acepciones lexicográficas verificadas individualmente.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ENTRADA 6 -->
+  <div class="entrada">
+    <div class="entrada-header">
+      <div class="num-badge nb-gemini">6</div>
+      <div class="entrada-titulo">Verificación de URLs de canciones en Genius</div>
+      <span class="ia-tag tag-gemini">Gemini</span>
+    </div>
+    <div class="entrada-body">
+      <table>
+        <tr>
+          <td>Fecha aproximada</td>
+          <td>Octubre 2026</td>
+        </tr>
+        <tr>
+          <td>Fase del proyecto</td>
+          <td><span class="phase-tag">Fase 3 — Recolección</span></td>
+        </tr>
+        <tr>
+          <td>Enlace</td>
+          <td><span class="link-ref">https://share.gemini.google/zT60dDDOcNZ5</span></td>
+        </tr>
+        <tr>
+          <td>Tarea solicitada</td>
+          <td>Relacionar cada canción del corpus con su URL correcta en Genius, verificando que el link correspondiera exactamente al título y artista correcto.</td>
+        </tr>
+        <tr>
+          <td>Decisiones del equipo</td>
+          <td>El equipo validó manualmente los links entregados por Gemini antes de incluirlos en el corpus definitivo.</td>
+        </tr>
+        <tr>
+          <td>Uso de la IA</td>
+          <td>Gemini buscó en la web los links de Genius para cada canción del corpus, relacionando título, artista y año con la URL exacta de la letra en la plataforma.</td>
+        </tr>
+        <tr>
+          <td>Salidas obtenidas</td>
+          <td><span class="output-tag">Lista de URLs verificadas por canción</span></td>
+        </tr>
+        <tr>
+          <td>Limitaciones detectadas</td>
+          <td>Algunas URLs propuestas apuntaban a páginas inexistentes o a versiones incorrectas de la canción, requiriendo verificación manual adicional.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ENTRADA 7 -->
+  <div class="entrada">
+    <div class="entrada-header">
+      <div class="num-badge nb-chatgpt">7</div>
+      <div class="entrada-titulo">Análisis estadístico: Mann-Whitney, Spearman y evolución temática</div>
+      <span class="ia-tag tag-chatgpt">ChatGPT</span>
+    </div>
+    <div class="entrada-body">
+      <table>
+        <tr>
+          <td>Fecha aproximada</td>
+          <td>Octubre 2026</td>
+        </tr>
+        <tr>
+          <td>Fase del proyecto</td>
+          <td>
+            <span class="phase-tag">Fase 4 — Análisis estadístico</span>
+            <span class="phase-tag">Fase 5 — Resultados</span>
+          </td>
+        </tr>
+        <tr>
+          <td>Enlace</td>
+          <td><span class="link-ref">https://chatgpt.com/share/6ade85b1-c7e4-83e9-bce1-9f95ae52a1d1</span></td>
+        </tr>
+        <tr>
+          <td>Tarea solicitada</td>
+          <td>Construcción de tres scripts R para responder las preguntas de investigación: (1) comparación de contenido temático entre hombres y mujeres usando Mann-Whitney por categoría del diccionario, (2) análisis de evolución temática de canciones de mujeres 2010–2025 usando correlación de Spearman y regresión lineal, y (3) extracción de partes femeninas en colaboraciones mixtas para incluirlas en el análisis de mujeres.</td>
+        </tr>
+        <tr>
+          <td>Prompt principal</td>
+          <td>"Quiero un código que analice la columna Género del Intérprete y me separe por hombres y mujeres y responda si difiere el contenido temático entre hombres y mujeres." / "Quiero que ese último código me tome la letra de las canciones de las mujeres pero que adicione las partes de las mujeres en colaboraciones mixtas."</td>
+        </tr>
+        <tr>
+          <td>Decisiones del equipo</td>
+          <td>El equipo decidió usar Mann-Whitney sobre t de Student por el desbalance entre grupos y los muchos ceros en las proporciones. Se decidió extraer solo los párrafos femeninos de las colaboraciones mixtas, no la canción completa. Se eligió dividir el período en 2010–2017 vs 2018–2025 para el boxplot comparativo.</td>
+        </tr>
+        <tr>
+          <td>Uso de la IA</td>
+          <td>ChatGPT generó los tres scripts R completos, corrigió errores de nombres de columna (tilde en "Género del Intérprete", "Término/expresión", "categoría principal"), explicó Mann-Whitney, Spearman, rangos y diferencias con otras pruebas, y agregó la normalización de nombres de artistas para capturar variaciones como "KAROL G" vs "Karol G".</td>
+        </tr>
+        <tr>
+          <td>Salidas obtenidas</td>
+          <td>
+            <span class="output-tag">Analisis hombres y mujeres.R</span>
+            <span class="output-tag">Analisis mujeres.R</span>
+            <span class="output-tag">analisis_genero_tematico.xlsx</span>
+            <span class="output-tag">analisis_evolucion_mujeres.xlsx</span>
+            <span class="output-tag">5 gráficos PNG por análisis</span>
+          </td>
+        </tr>
+        <tr>
+          <td>Limitaciones detectadas</td>
+          <td>Con solo 21 canciones de mujeres inicialmente, el poder estadístico es bajo. La IA recomendó ajuste Benjamini-Hochberg para comparaciones múltiples, correlación biserial de rangos con intervalo de confianza, y restringir el indicador a categoría SEXUALIDAD con explicitud explícita para mayor rigor metodológico.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ENTRADA 8 -->
+  <div class="entrada">
+    <div class="entrada-header">
+      <div class="num-badge nb-claude">8</div>
+      <div class="entrada-titulo">Revisión metodológica y sección de validación del instrumento</div>
+      <span class="ia-tag tag-claude">Claude</span>
+    </div>
+    <div class="entrada-body">
+      <table>
+        <tr>
+          <td>Fecha aproximada</td>
+          <td>Octubre 2026</td>
+        </tr>
+        <tr>
+          <td>Fase del proyecto</td>
+          <td>
+            <span class="phase-tag">Fase 6 — Validación</span>
+            <span class="phase-tag">Fase 7 — Informe</span>
+          </td>
+        </tr>
+        <tr>
+          <td>Enlace</td>
+          <td><span class="link-ref">https://claude.ai/share/ac9c01dd-66f4-42dc-ad26-bee75badf413</span></td>
+        </tr>
+        <tr>
+          <td>Tarea solicitada</td>
+          <td>Redacción de la sección 6 del informe técnico sobre el alcance y limitaciones del instrumento de medición, revisión del documento Word con todos los pendientes y correcciones, y ajuste de la redacción para reflejar con precisión lo que se realizó (análisis léxico automatizado) sin atribuir validación formal que no se ejecutó.</td>
+        </tr>
+        <tr>
+          <td>Prompt principal</td>
+          <td>"A partir de los ajustes realizados, ¿cómo podría redactar de forma más clara y fluida esta parte? Adicionalmente, por favor evalúa el texto completo para comprobar si falta corregir algún detalle o si se nos escapa algún requerimiento."</td>
+        </tr>
+        <tr>
+          <td>Decisiones del equipo</td>
+          <td>El equipo decidió describir el procedimiento realizado honestamente como análisis léxico automatizado, sin presentarlo como validación del LLM exigida por la guía. Se aclaró que las fuentes de selección del corpus están documentadas en la bitácora de IA y se eliminó la tabla de componentes pendientes para no dejar marcas de trabajo incompleto visibles en el entregable.</td>
+        </tr>
+        <tr>
+          <td>Uso de la IA</td>
+          <td>Claude redactó la sección 6 del informe, revisó la numeración de tablas, corrigió referencias internas contradictorias, ajustó menciones a Claude para describir solo lo que realmente se hizo, e identificó los puntos pendientes del documento (diseño muestral, fuentes de Billboard/Spotify, reproducibilidad del script).</td>
+        </tr>
+        <tr>
+          <td>Salidas obtenidas</td>
+          <td>
+            <span class="output-tag">Informe_Tecnico_DATA_FLOW_revisado.docx</span>
+            <span class="output-tag">Informe_Tecnico_DATA_FLOW_final.docx</span>
+          </td>
+        </tr>
+        <tr>
+          <td>Limitaciones detectadas</td>
+          <td>El informe no acredita la validación del LLM exigida en la guía (doble anotación humana, kappa de Cohen con intervalos de confianza). La sección 6 deja esto explícito como limitación del estudio.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- REFLEXIÓN CRÍTICA -->
+  <div class="reflexion">
+    <h2>💡 Reflexión crítica sobre el uso de IA</h2>
+    <p>
+      A lo largo del proyecto las herramientas de IA se usaron como apoyo técnico, no como sustitutos del criterio metodológico del equipo. Todas las decisiones sobre preguntas de investigación, criterios de selección del corpus, definición de categorías y validación de canciones fueron tomadas por el equipo.
+    </p>
+    <p>
+      Se identificaron limitaciones importantes: Claude no pudo acceder directamente a los year-end charts históricos de Billboard; ChatGPT propuso canciones con años incorrectos o que no existían, requiriendo múltiples correcciones, y su Diccionario Maestro de 1.420 términos advirtió que solo 5 entradas tenían respaldo lexicográfico verificado individualmente; Gemini entregó algunas URLs de Genius incorrectas que requirieron verificación manual. Estas limitaciones se documentaron y se tomaron como insumo metodológico.
+    </p>
+    <p>
+      El uso de IA en este proyecto es coherente con el objetivo declarado por el profesor Enrique De La Hoz: demostrar que un LLM puede funcionar como instrumento de medición estadística, siempre que se valide con el protocolo adecuado (libro de códigos, doble anotación, kappa de Cohen). Las IA fueron tanto herramientas de trabajo como objeto de estudio del proyecto.
+    </p>
+  </div>
+
+  <div class="footer">
+    Proyecto 3 — Estadística del Reggaetón · Estadística Industrial · Universidad del Magdalena · 2026-II
+  </div>
+
+</div>
+</body>
+</html>
